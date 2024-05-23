@@ -1,7 +1,8 @@
 import pygame
 
 class Fighter():
-    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps, sound):
+    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps, sound, surface):
+        self.surface = surface
         self.player = player
         self.size = data[0]
         self.image_scale = data[1]
@@ -15,6 +16,8 @@ class Fighter():
         self.attacking = False
         self.attack_type = 0
         self.attack_cooldown = 0
+        self.attack_range =  data[3]
+        self.damage =  data[4]
         self.attack_sound = sound
         self.hit = False
         self.health = 100
@@ -63,7 +66,7 @@ class Fighter():
                     self.run_left = False
                 # jump
                 if key[pygame.K_w] and self.jump == False:
-                    self.vel_y = -30
+                    self.vel_y = -40
                     self.jump = True
                 # attack
                 if key[pygame.K_r] or key[pygame.K_t]:
@@ -88,7 +91,7 @@ class Fighter():
                     self.run_left = False
                 # jump
                 if key[pygame.K_UP] and self.jump == False:
-                    self.vel_y = -30
+                    self.vel_y = -40
                     self.jump = True
                 # attack
                 if key[pygame.K_k] or key[pygame.K_l]:
@@ -177,10 +180,11 @@ class Fighter():
             # execute attack
             self.attacking = True
             self.attack_sound.play()
-            attack_rect =  pygame.Rect((self.rect.centerx - (2*self.rect.width*self.flip), self.rect.y, 2.5*self.rect.width, self.rect.height))
+            attack_rect =  pygame.Rect((self.rect.centerx - (self.attack_range*self.rect.width*self.flip), self.rect.y, self.attack_range*self.rect.width, self.rect.height))
             if attack_rect.colliderect(target.rect):
-                target.health -= 10
+                target.health -= self.damage
                 target.hit = True
+            pygame.draw.rect(self.surface, 'blue', attack_rect)
 
     def update_action(self, new_action):
         # check if the new action different to the previous one
@@ -196,4 +200,6 @@ class Fighter():
         else:
             self.flip = False
         img =  pygame.transform.flip(self.image, self.flip, False)
+        rect = pygame.Rect(self.rect.x, self.rect.y, 80, 160)
+        pygame.draw.rect(surface, 'red', rect)
         surface.blit(img, (self.rect.x-(self.offset[0]*self.image_scale), self.rect.y-(self.offset[1]*self.image_scale)))

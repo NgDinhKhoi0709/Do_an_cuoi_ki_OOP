@@ -10,7 +10,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Brawler")
+pygame.display.set_caption("Battle Legends")
 
 # set framerate
 clock = pygame.time.Clock()
@@ -25,17 +25,17 @@ ROUND_OVER_COOLDOWN = 2000
 
 # define font
 count_font =  pygame.font.Font("assets/fonts/turok.ttf", 150)
-score_font =  pygame.font.Font("assets/fonts/turok.ttf", 30)
+score_font =  pygame.font.Font("assets/fonts/m3x6.ttf", 30)
 
 # define fighter variables
 WARRIOR_SIZE = 162
 WARRIOR_SCALE = 4
 WARRIOR_OFFSET = [72, 56]
-WARRIOR_DATA = [WARRIOR_SIZE, WARRIOR_SCALE, WARRIOR_OFFSET]
+WARRIOR_DATA = [WARRIOR_SIZE, WARRIOR_SCALE, WARRIOR_OFFSET, 3, 10]
 WIZARD_SIZE = 250
 WIZARD_SCALE = 3
-WIZARD_OFFSET = [122, 107]
-WIZARD_DATA = [WIZARD_SIZE, WIZARD_SCALE, WIZARD_OFFSET]
+WIZARD_OFFSET = [110, 107]
+WIZARD_DATA = [WIZARD_SIZE, WIZARD_SCALE, WIZARD_OFFSET, 4, 5]
 
 # load music and sounds
 pygame.mixer.music.load("assets/audio/music.mp3")
@@ -44,8 +44,12 @@ pygame.mixer.music.play(-1, 0.0, 5000)
 sword_fx = pygame.mixer.Sound("assets/audio/sword.wav")
 magic_fx = pygame.mixer.Sound("assets/audio/magic.wav")
 
-#=load background image
+# load background image
 bg_img =  pygame.image.load("assets/images/background/background.jpg").convert_alpha()
+
+# load icon game
+icon = pygame.image.load("assets/images/icons/ares.png").convert_alpha()
+pygame.display.set_icon(icon)
 
 # load spritesheets
 warrior_sheet = pygame.image.load("assets/images/warrior/Sprites/warrior.png").convert_alpha()
@@ -90,8 +94,8 @@ def draw_grid():
         pygame.draw.line(screen, grid_color, (0, y), (SCREEN_WIDTH, y))
 
 # create two instances of fighters
-fighter_1 = Fighter(1, 200, 460, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
-fighter_2 = Fighter(2, 1000, 460, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
+fighter_1 = Fighter(1, 200, 460, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx, screen)
+fighter_2 = Fighter(2, 1000, 460, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx, screen)
 
 # game loop
 running =  True
@@ -103,10 +107,10 @@ while running:
     # draw player health
     draw_health_bar(fighter_1.health, 20, 20)
     draw_health_bar(fighter_2.health, 860, 20)
-    draw_text("P1: " + str(score[0]), score_font, 'red', 20, 60)
-    draw_text("P2: " + str(score[1]), score_font, 'red', 860, 60)
+    draw_text("P1: " + str(score[0]), score_font, 'red', 20, 50)
+    draw_text("P2: " + str(score[1]), score_font, 'red', 860, 50)
     # update countdown
-    if intro_count <= 0:
+    if True:
         # move fighters
         fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter_2, round_over)
         fighter_2.move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter_1, round_over)
