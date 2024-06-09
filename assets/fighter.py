@@ -1,7 +1,24 @@
 import pygame
 
 class Fighter():
+    """
+    Lớp Fighter đại diện cho một nhân vật chiến đấu trong trò chơi. 
+    Lớp này quản lý các thuộc tính và hành vi của nhân vật như di chuyển, tấn công, và cập nhật hoạt ảnh.
+    """
     def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps, sound, surface):
+        """
+        Khởi tạo các thuộc tính và thiết lập trạng thái ban đầu cho nhân vật chiến đấu.
+        Args:
+            player (int): Số người chơi (1 hoặc 2).
+            x (int): Tọa độ x ban đầu của nhân vật.
+            y (int): Tọa độ y ban đầu của nhân vật.
+            flip (bool): Xác định nhân vật có bị lật hình theo chiều ngang không.
+            data (tuple): Bộ dữ liệu chứa kích thước khung hình, hệ số tỷ lệ, độ dịch chuyển, phạm vi tấn công và sát thương.
+            sprite_sheet (pygame.Surface): Bảng sprite chứa các khung hình của nhân vật.
+            animation_steps (list): Danh sách số lượng khung hình cho từng hoạt ảnh.
+            sound (pygame.mixer.Sound): Âm thanh phát ra khi tấn công.
+            surface (pygame.Surface): Bề mặt để vẽ nhân vật.
+        """
         self.surface = surface
         self.player = player
         self.size = data[0]
@@ -30,7 +47,14 @@ class Fighter():
 
 
     def load_img(self, sprite_sheet, animation_steps):
-        # extract imgs from spritesheet
+        """
+        Tải các hình ảnh từ bảng sprite và tạo danh sách các khung hình cho các hoạt ảnh.
+        Args:
+            sprite_sheet (pygame.Surface): Bảng sprite chứa các khung hình của nhân vật.
+            animation_steps (list): Danh sách số lượng khung hình cho từng hoạt ảnh.
+        Returns:
+            list: Danh sách các khung hình cho từng hoạt ảnh.
+        """
         animation_list = []
         for y, animation in enumerate(animation_steps):
             temp_img_list = []
@@ -41,6 +65,14 @@ class Fighter():
         return animation_list
     
     def move(self, screen_width, screen_height, target, round_over):
+        """
+        Di chuyển nhân vật dựa trên đầu vào của người chơi và cập nhật vị trí của nhân vật.
+        Args:
+            screen_width (int): Chiều rộng của màn hình.
+            screen_height (int): Chiều cao của màn hình.
+            target (Fighter): Đối tượng nhân vật mà người chơi đang chiến đấu.
+            round_over (bool): Trạng thái của vòng chơi (kết thúc hay chưa).
+        """
         SPEED = 10
         GRAVITY = 2
         dx = 0
@@ -123,9 +155,12 @@ class Fighter():
         self.rect.x += dx
         self.rect.y += dy
 
-    # handle animation updates
     def update(self):
-        # check what action the player is performing
+        """
+        Cập nhật trạng thái và hoạt ảnh của nhân vật dựa trên các điều kiện hiện tại.
+        Kiểm tra trạng thái của nhân vật (sống, bị đánh, tấn công, nhảy, chạy) và 
+        cập nhật hoạt ảnh tương ứng. Quản lý thời gian và sự chuyển đổi giữa các khung hình.
+        """
         if self.health <= 0:
             self.health = 0
             self.alive = False
@@ -170,6 +205,11 @@ class Fighter():
                     self.attack_cooldown = 20
          
     def attack(self, target):
+        """
+        Thực hiện hành động tấn công đối với mục tiêu.
+        Args:
+            target (Fighter): Đối tượng nhân vật mà người chơi đang tấn công.
+        """
         if self.attack_cooldown == 0:
             # execute attack
             self.attacking = True
@@ -178,10 +218,13 @@ class Fighter():
             if attack_rect.colliderect(target.rect):
                 target.health -= self.damage
                 target.hit = True
-            #pygame.draw.rect(self.surface, 'blue', attack_rect)
 
     def update_action(self, new_action):
-        # check if the new action different to the previous one
+        """
+        Cập nhật hành động hiện tại của nhân vật nếu hành động mới khác với hành động hiện tại.
+        Args:
+            new_action (int): Hành động mới để cập nhật.
+        """
         if new_action != self.action:
             self.action = new_action
             # update the animation settings
@@ -189,7 +232,11 @@ class Fighter():
             self.update_time = pygame.time.get_ticks()
 
     def draw(self, surface):
+        """
+        Vẽ nhân vật lên bề mặt màn hình.
+        Args:
+            surface (pygame.Surface): Bề mặt để vẽ nhân vật.
+        """
         img =  pygame.transform.flip(self.image, self.run_left, False)
         rect = pygame.Rect(self.rect.x, self.rect.y, 80, 160)
-        #pygame.draw.rect(surface, 'red', rect)
         surface.blit(img, (self.rect.x-(self.offset[0]*self.image_scale), self.rect.y-(self.offset[1]*self.image_scale)))
