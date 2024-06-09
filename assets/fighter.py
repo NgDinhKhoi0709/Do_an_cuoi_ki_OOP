@@ -20,7 +20,7 @@ class Fighter():
         self.damage =  data[4]
         self.attack_sound = sound
         self.hit = False
-        self.health = 100
+        self.health = 10
         self.alive = True
         self.animation_list = self.load_img(sprite_sheet, animation_steps)
         self.action = 0 #0: idle, 1: run, 2: jump, 3: attack1, 4: attack2, 5: hit, 6: death 
@@ -69,10 +69,10 @@ class Fighter():
                     self.vel_y = -40
                     self.jump = True
                 # attack
-                if key[pygame.K_r] or key[pygame.K_t]:
+                if key[pygame.K_t] or key[pygame.K_y]:
                     self.attack(target)
                     # determine which attack type was used
-                    if key[pygame.K_r]:
+                    if key[pygame.K_y]:
                         self.attack_type = 1
                     if key[pygame.K_t]:
                         self.attack_type = 2
@@ -94,12 +94,12 @@ class Fighter():
                     self.vel_y = -40
                     self.jump = True
                 # attack
-                if key[pygame.K_k] or key[pygame.K_l]:
+                if key[pygame.K_KP2] or key[pygame.K_KP3]:
                     self.attack(target)
                     # determine which attack type was used
-                    if key[pygame.K_k]:
+                    if key[pygame.K_KP2]:
                         self.attack_type = 1
-                    if key[pygame.K_l]:
+                    if key[pygame.K_KP3]:
                         self.attack_type = 2
 
         # apply gravity
@@ -115,12 +115,6 @@ class Fighter():
             self.vel_y = 0
             self.jump = False
             dy =  screen_height - 140 -  self.rect.bottom
-        
-        '''# ensure player face each other
-        if target.rect.centerx > self.rect.centerx:
-            self.flip = False
-        else:
-            self.flip = True'''
 
         # apply attack cooldown
         if self.attack_cooldown > 0:
@@ -142,7 +136,7 @@ class Fighter():
             if self.attack_type == 1:
                 self.update_action(3) # attack1
             elif self.attack_type == 2:
-                self.update_action(4) # attcack2
+                self.update_action(4) # attack2
         elif self.jump == True:
             self.update_action(2)
         elif self.running == True:
@@ -180,7 +174,7 @@ class Fighter():
             # execute attack
             self.attacking = True
             self.attack_sound.play()
-            attack_rect =  pygame.Rect((self.rect.centerx - (self.attack_range*self.rect.width*self.flip), self.rect.y, self.attack_range*self.rect.width, self.rect.height))
+            attack_rect =  pygame.Rect((self.rect.centerx - (self.attack_range*self.rect.width*self.run_left), self.rect.y, self.attack_range*self.rect.width, self.rect.height))
             if attack_rect.colliderect(target.rect):
                 target.health -= self.damage
                 target.hit = True
@@ -195,11 +189,7 @@ class Fighter():
             self.update_time = pygame.time.get_ticks()
 
     def draw(self, surface):
-        if self.run_left:
-            self.flip = True
-        else:
-            self.flip = False
-        img =  pygame.transform.flip(self.image, self.flip, False)
+        img =  pygame.transform.flip(self.image, self.run_left, False)
         rect = pygame.Rect(self.rect.x, self.rect.y, 80, 160)
         #pygame.draw.rect(surface, 'red', rect)
         surface.blit(img, (self.rect.x-(self.offset[0]*self.image_scale), self.rect.y-(self.offset[1]*self.image_scale)))
