@@ -20,7 +20,7 @@ class Fighter():
         self.damage =  data[4]
         self.attack_sound = sound
         self.hit = False
-        self.health = 10
+        self.health = 100
         self.alive = True
         self.animation_list = self.load_img(sprite_sheet, animation_steps)
         self.action = 0 #0: idle, 1: run, 2: jump, 3: attack1, 4: attack2, 5: hit, 6: death 
