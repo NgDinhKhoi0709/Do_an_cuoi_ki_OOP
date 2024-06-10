@@ -310,6 +310,8 @@ class WinnerScreen:
     def draw_winner_idle(self, screen):
         """
         Hiển thị hoạt ảnh idle của nhân vật chiến thắng
+        Args:
+            screen  (pygame.Surface): màn hình hiển thị
         """
         now = pygame.time.get_ticks()
         if now - self.last_update > 1000 * self.idle_animation_speed:
@@ -322,6 +324,8 @@ class WinnerScreen:
     def display_winner_screen(self, screen):
         """
         Hiển thị màn hình winner_screen
+        Args:
+            screen  (pygame.Surface): màn hình hiển thị
         """
         while True:
             ret, frame = self.winner_bg.read()
