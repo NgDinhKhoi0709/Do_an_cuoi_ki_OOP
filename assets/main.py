@@ -379,7 +379,7 @@ class WinnerScreen:
 
     def release_video(self):
         """
-        Phát hành winner_bg
+        Giải phóng tài nguyên khi không dùng nữa.
         """
         self.winner_bg.release()
 
