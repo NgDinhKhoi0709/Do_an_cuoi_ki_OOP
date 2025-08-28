@@ -109,17 +109,26 @@ class Menu:
             PLAYER1_RECT = PLAYER1_TEXT.get_rect(center=(320, 200))
             self.SCREEN.blit(PLAYER1_TEXT, PLAYER1_RECT)
 
-            PLAYER1_TEXT = player1_font.render("Press t", True, "#b68f40")
-            PLAYER1_RECT = PLAYER1_TEXT.get_rect(center=(320, 650))
-            self.SCREEN.blit(PLAYER1_TEXT, PLAYER1_RECT)
-
             PLAYER2_TEXT = player1_font.render("Player 2:", True, "#b68f40")
             PLAYER2_RECT = PLAYER2_TEXT.get_rect(center=(960, 200))
             self.SCREEN.blit(PLAYER2_TEXT, PLAYER2_RECT)
 
-            PLAYER1_TEXT = player1_font.render("Press 2", True, "#b68f40")
-            PLAYER1_RECT = PLAYER1_TEXT.get_rect(center=(960, 650))
-            self.SCREEN.blit(PLAYER1_TEXT, PLAYER1_RECT)
+            # instruction lines (smaller font, split into 2 rows each side)
+            instr_font = self.get_font(28)
+            P1_LINE1 = instr_font.render("A/D to choose", True, "#b68f40")
+            P1_LINE2 = instr_font.render("Press T to confirm", True, "#b68f40")
+            P2_LINE1 = instr_font.render("Left/Right to choose", True, "#b68f40")
+            P2_LINE2 = instr_font.render("Press 2 to confirm", True, "#b68f40")
+
+            P1_LINE1_RECT = P1_LINE1.get_rect(center=(320, 650))
+            P1_LINE2_RECT = P1_LINE2.get_rect(center=(320, 690))
+            P2_LINE1_RECT = P2_LINE1.get_rect(center=(960, 650))
+            P2_LINE2_RECT = P2_LINE2.get_rect(center=(960, 690))
+
+            self.SCREEN.blit(P1_LINE1, P1_LINE1_RECT)
+            self.SCREEN.blit(P1_LINE2, P1_LINE2_RECT)
+            self.SCREEN.blit(P2_LINE1, P2_LINE1_RECT)
+            self.SCREEN.blit(P2_LINE2, P2_LINE2_RECT)
 
             now = pygame.time.get_ticks()
             if now - last_update > animation_speed:
@@ -150,8 +159,8 @@ class Menu:
                         selected_character_1 = characters[current_character_index_1]
                         idle_frames_1 = self.load_idle_animation(selected_character_1)
                         current_frame_1 = 0
-                    if (event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT or event.key == pygame.K_KP2) and player2_choice == None:
-                        if event.key == pygame.K_KP2:
+                    if (event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT or event.key == pygame.K_KP2 or event.key == pygame.K_2) and player2_choice == None:
+                        if event.key == pygame.K_KP2 or event.key == pygame.K_2:
                             player2_choice = selected_character_2
                             break
                         if event.key == pygame.K_RIGHT:
@@ -432,6 +441,7 @@ class Main:
         # Define các loại font
         self.count_font = pygame.font.Font(rel_path("fonts", "DungeonFont.ttf"), 200)
         self.score_font = pygame.font.Font(rel_path("fonts", "m3x6.ttf"), 50)
+        self.label_font = pygame.font.Font(rel_path("fonts", "m3x6.ttf"), 32)
         self.menu_font = pygame.font.Font(None, 40)
         self.pause_game_font = pygame.font.Font(rel_path("fonts", "font.ttf"), 75)
         self.victory_font = pygame.font.Font(rel_path("fonts", "DungeonFont.ttf"), 150)
@@ -473,6 +483,10 @@ class Main:
         self.wizard_sheet = pygame.image.load(rel_path("images", "wizard", "Sprites", "wizard.png")).convert_alpha()
         self.hero_sheet = pygame.image.load(rel_path("images", "hero", "Sprites", "hero.png")).convert_alpha()
 
+        # Colors for player labels
+        self.p1_label_color = (235, 70, 70)
+        self.p2_label_color = (70, 130, 255)
+
         self.WARRIOR_ANIMATION_STEPS = [10, 8, 1, 7, 7, 3, 7]
         self.WIZARD_ANIMATION_STEPS = [8, 8, 1, 8, 8, 3, 7]
         self.HERO_ANIMATION_STEPS = [10, 8, 3, 7, 6, 3, 11]
@@ -513,6 +527,19 @@ class Main:
         """
         img = font.render(text, True, col)
         self.screen.blit(img, (x, y))
+
+    def draw_foot_label(self, fighter, label, color):
+        """
+        Vẽ nhãn P1/P2 dưới chân nhân vật để phân biệt người chơi.
+        """
+        text_surface = self.label_font.render(label, True, color)
+        x = fighter.rect.centerx
+        y = fighter.rect.bottom + 70
+        text_rect = text_surface.get_rect(center=(x, y))
+        # simple shadow for readability
+        shadow = self.label_font.render(label, True, (0, 0, 0))
+        self.screen.blit(shadow, text_rect.move(1, 1))
+        self.screen.blit(text_surface, text_rect)
 
     def draw_health_bar(self, health, x, y):
         """
@@ -608,6 +635,10 @@ class Main:
                 
                 self.fighter_1.draw(self.screen)
                 self.fighter_2.draw(self.screen)
+
+                # Nhãn chân người chơi
+                self.draw_foot_label(self.fighter_1, "P1", self.p1_label_color)
+                self.draw_foot_label(self.fighter_2, "P2", self.p2_label_color)
                 
                 # Kiểm tra đã kết thúc round chưa
                 if not self.round_over:

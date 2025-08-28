@@ -2,6 +2,10 @@
 
 An OOP-based 2D fighting game built with Python, Pygame, and OpenCV.
 
+### Demo
+![Menu](docs/images/menu.png)
+![In-game](docs/images/ingame.png)
+
 ### Features
 - **Menu, Tutorial, Character Selection, Pause, Winner screens** with video backgrounds
 - **Three characters**: Warrior, Wizard, Hero (sprite-sheet animations)
