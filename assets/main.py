@@ -1,8 +1,17 @@
 import cv2
 import pygame
 from pygame import mixer
-from fighter import Fighter
-from button import Button
+from pathlib import Path
+try:
+    from assets.fighter import Fighter
+    from assets.button import Button
+except ImportError:
+    from fighter import Fighter
+    from button import Button
+
+ASSETS_DIR = Path(__file__).resolve().parent
+def rel_path(*parts):
+    return str(ASSETS_DIR.joinpath(*parts))
 
 class Menu:
     """
@@ -16,17 +25,17 @@ class Menu:
 
         self.SCREEN = pygame.display.set_mode((1280, 720))  # Kích thước màn hình
         pygame.display.set_caption("Battle Legends")    # Caption
-        self.icon = pygame.image.load("assets/images/icons/ares.png").convert_alpha()   # Load icon
+        self.icon = pygame.image.load(rel_path("images", "icons", "ares.png")).convert_alpha()   # Load icon
         pygame.display.set_icon(self.icon)  # Hiển thị icon
 
-        self.menu_bg = cv2.VideoCapture('assets/images/background/menu_bg.mp4') # Load menu_bg
+        self.menu_bg = cv2.VideoCapture(rel_path('images', 'background', 'menu_bg.mp4')) # Load menu_bg
 
-        self.name_game_font = pygame.font.Font("assets/fonts/turok.ttf", 165)   # get name_game_font
+        self.name_game_font = pygame.font.Font(rel_path("fonts", "turok.ttf"), 165)   # get name_game_font
 
-        self.tutorial_img = pygame.image.load("assets/images/background/tutorial_bg.png").convert_alpha()   # Load tutorial_img
-        self.tutorial_bg = cv2.VideoCapture('assets/images/background/tutorial_bg.mp4') # Load tutorial_bg
+        self.tutorial_img = pygame.image.load(rel_path("images", "background", "tutorial_bg.png")).convert_alpha()   # Load tutorial_img
+        self.tutorial_bg = cv2.VideoCapture(rel_path('images', 'background', 'tutorial_bg.mp4')) # Load tutorial_bg
 
-        self.select_bg = cv2.VideoCapture('assets/images/background/select_bg.mp4') # Load select_bg
+        self.select_bg = cv2.VideoCapture(rel_path('images', 'background', 'select_bg.mp4')) # Load select_bg
 
         self.clock = pygame.time.Clock()
         
@@ -38,7 +47,7 @@ class Menu:
         Returns:
             pygame.font.Font: Đối tượng font chữ với kích thước đã chọn.
         """
-        return pygame.font.Font("assets/fonts/font.ttf", size)
+        return pygame.font.Font(rel_path("fonts", "font.ttf"), size)
 
     def load_idle_animation(self, character_choice):
         """
@@ -50,9 +59,9 @@ class Menu:
         """
         idle_frames = []
         character_data = {
-            'Warrior': ["assets/images/warrior/Sprites/warrior.png", 10, 162, 6],
-            'Wizard': ["assets/images/wizard/Sprites/wizard.png", 8, 250, 4],
-            'Hero': ["assets/images/hero/Sprites/hero.png", 6, 126, 6]
+            'Warrior': [rel_path("images", "warrior", "Sprites", "warrior.png"), 10, 162, 6],
+            'Wizard': [rel_path("images", "wizard", "Sprites", "wizard.png"), 8, 250, 4],
+            'Hero': [rel_path("images", "hero", "Sprites", "hero.png"), 6, 126, 6]
         }
         character_path, num_frames, size, scale = character_data[character_choice]
         frame = pygame.image.load(character_path).convert_alpha()
@@ -275,10 +284,10 @@ class WinnerScreen:
         self.screen_width = 1280    # Chiều dài màn hình
         self.screen_height = 720    # Chiều rộng màn hình
 
-        self.winner_bg = cv2.VideoCapture("assets/images/background/winner_bg.mp4") # Load winner_bg
+        self.winner_bg = cv2.VideoCapture(rel_path("images", "background", "winner_bg.mp4")) # Load winner_bg
 
-        self.font = pygame.font.Font("assets/fonts/font.ttf", 60)   # Get font
-        self.winner_font = pygame.font.Font("assets/fonts/turok.ttf", 250)  # Get winner font
+        self.font = pygame.font.Font(rel_path("fonts", "font.ttf"), 60)   # Get font
+        self.winner_font = pygame.font.Font(rel_path("fonts", "turok.ttf"), 250)  # Get winner font
         
         self.winner_choice = winner_choice  # Tên nhân vật của người chiến thắng
         
@@ -286,9 +295,9 @@ class WinnerScreen:
 
         # Dữ liệu để hiện thị các nhân vật
         self.character_data = {                                                     
-            'Warrior': ["assets/images/warrior/Sprites/warrior.png", 10, 162, 4],
-            'Wizard': ["assets/images/wizard/Sprites/wizard.png", 8, 250, 2.5],
-            'Hero': ["assets/images/hero/Sprites/hero.png", 6, 126, 4]
+            'Warrior': [rel_path("images", "warrior", "Sprites", "warrior.png"), 10, 162, 4],
+            'Wizard': [rel_path("images", "wizard", "Sprites", "wizard.png"), 8, 250, 2.5],
+            'Hero': [rel_path("images", "hero", "Sprites", "hero.png"), 6, 126, 4]
         }
 
         self.load_winner_idle()
@@ -421,28 +430,28 @@ class Main:
         self.paused = False     # Biến kiểm tra pause game
 
         # Define các loại font
-        self.count_font = pygame.font.Font("assets/fonts/DungeonFont.ttf", 200)
-        self.score_font = pygame.font.Font("assets/fonts/m3x6.ttf", 50)
+        self.count_font = pygame.font.Font(rel_path("fonts", "DungeonFont.ttf"), 200)
+        self.score_font = pygame.font.Font(rel_path("fonts", "m3x6.ttf"), 50)
         self.menu_font = pygame.font.Font(None, 40)
-        self.pause_game_font = pygame.font.Font("assets/fonts/font.ttf", 75)
-        self.victory_font = pygame.font.Font("assets/fonts/DungeonFont.ttf", 150)
+        self.pause_game_font = pygame.font.Font(rel_path("fonts", "font.ttf"), 75)
+        self.victory_font = pygame.font.Font(rel_path("fonts", "DungeonFont.ttf"), 150)
 
         # Load audio
-        pygame.mixer.music.load("assets/audio/music.mp3")
+        pygame.mixer.music.load(rel_path("audio", "music.mp3"))
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(-1, 0.0, 5000)
-        self.sword_fx = pygame.mixer.Sound("assets/audio/sword.wav")
-        self.magic_fx = pygame.mixer.Sound("assets/audio/magic.wav")
+        self.sword_fx = pygame.mixer.Sound(rel_path("audio", "sword.wav"))
+        self.magic_fx = pygame.mixer.Sound(rel_path("audio", "magic.wav"))
 
         # Display icon
-        self.icon = pygame.image.load("assets/images/icons/ares.png").convert_alpha()
+        self.icon = pygame.image.load(rel_path("images", "icons", "ares.png")).convert_alpha()
         pygame.display.set_icon(self.icon)
 
         # Load pause_game_bg
-        self.pause_game_bg = cv2.VideoCapture('assets/images/background/pause_game_bg.mp4')
+        self.pause_game_bg = cv2.VideoCapture(rel_path('images', 'background', 'pause_game_bg.mp4'))
 
         #Load fighting_bg
-        self.fighting_bg = cv2.VideoCapture('assets/images/background/fighting_bg.mp4')
+        self.fighting_bg = cv2.VideoCapture(rel_path('images', 'background', 'fighting_bg.mp4'))
 
         # Data của 3 nhân vật
         self.WARRIOR_SIZE = 162
@@ -460,9 +469,9 @@ class Main:
         self.HERO_OFFSET = [50, 30]
         self.HERO_DATA = [self.HERO_SIZE, self.HERO_SCALE, self.HERO_OFFSET, 2.80, 10]
 
-        self.warrior_sheet = pygame.image.load("assets/images/warrior/Sprites/warrior.png").convert_alpha()
-        self.wizard_sheet = pygame.image.load("assets/images/wizard/Sprites/wizard.png").convert_alpha()
-        self.hero_sheet = pygame.image.load("assets/images/hero/Sprites/hero.png").convert_alpha()
+        self.warrior_sheet = pygame.image.load(rel_path("images", "warrior", "Sprites", "warrior.png")).convert_alpha()
+        self.wizard_sheet = pygame.image.load(rel_path("images", "wizard", "Sprites", "wizard.png")).convert_alpha()
+        self.hero_sheet = pygame.image.load(rel_path("images", "hero", "Sprites", "hero.png")).convert_alpha()
 
         self.WARRIOR_ANIMATION_STEPS = [10, 8, 1, 7, 7, 3, 7]
         self.WIZARD_ANIMATION_STEPS = [8, 8, 1, 8, 8, 3, 7]
