@@ -2,8 +2,6 @@
 
 An OOP-based 2D fighting game built with Python, Pygame, and OpenCV.
 
-Repository: [`NgDinhKhoi0709/Do_an_cuoi_ki_OOP`](https://github.com/NgDinhKhoi0709/Do_an_cuoi_ki_OOP)
-
 ### Features
 - **Menu, Tutorial, Character Selection, Pause, Winner screens** with video backgrounds
 - **Three characters**: Warrior, Wizard, Hero (sprite-sheet animations)
@@ -68,8 +66,5 @@ Do_an_cuoi_ki_OOP/
 ### Development Tips
 - Use module mode (`python -m assets.main`) to avoid import/path issues.
 - Keep sprite-sheet frame sizes consistent when updating character sprites.
-
-### Credits
-- Code, assets organization and documentation based on the repository at [`NgDinhKhoi0709/Do_an_cuoi_ki_OOP`](https://github.com/NgDinhKhoi0709/Do_an_cuoi_ki_OOP).
 
 
